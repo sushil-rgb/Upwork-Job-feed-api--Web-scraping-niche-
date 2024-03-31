@@ -23,16 +23,10 @@ class Response:
                 return cont
 
 
-def filter_duplicates(raw_lists):
+def filter(raw_lists):
     filtered_lists = []
-
-    # Iterate through each element in the input list:
     for file in raw_lists:
-
-        # Check if the element is not already in the filtered list:
         if not file in filtered_lists:
-
-            # Append the element to the filtered list:
             filtered_lists.append(file)
     return filtered_lists
 

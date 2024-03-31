@@ -1,7 +1,6 @@
 from tool import Response, filter, flat
 from bs4 import BeautifulSoup
 from datetime import datetime
-import pytz
 import pandas as pd
 import asyncio
 
@@ -22,8 +21,8 @@ async def rss_url_lists():
 
 
 async def job_alerts(rss_url):
-    source_timezone = pytz.utc
-    target_timezone = pytz.timezone('Asia/Kathmandu')
+    # source_timezone = pytz.utc
+    # target_timezone = pytz.timezone('Asia/Kathmandu')
 
     job_datas = []
     cont = await Response(rss_url).content()

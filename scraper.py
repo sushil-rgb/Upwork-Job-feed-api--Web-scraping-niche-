@@ -15,7 +15,7 @@ async def job_alerts():
                 datas = {
                     'title': [j.text.strip() for j in job.select('title')[2:]][idx],
                     'link': [j.text.strip() for j in job.select('link')[2:]][idx],
-                    'post_time': [datetime.strptime(j.text.strip(), "%a, %d %b %Y %H:%M:%S %z") for j in job.select('pubDate')][idx]
+                    'post_time': [(datetime.strptime(j.text.strip(), "%a, %d %b %Y %H:%M:%S %z")).strftime("%d %A, %B %Y") for j in job.select('pubDate')][idx]
 
                 }
                 job_datas.append(datas)

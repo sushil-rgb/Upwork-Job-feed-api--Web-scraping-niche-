@@ -34,7 +34,7 @@ async def job_alerts():
                     'title': [j.text.strip() for j in job.select('title')[2:]][idx],
                     'link': [j.text.strip() for j in job.select('link')[2:]][idx],
                     'post_date': [' '.join(j.text.strip().split()[:-2]) for j in job.select('pubDate')][idx],
-                    'post_time': [timezone_conversion(j.text.strip().split()[-2]) for j in job.select('pubDate')][idx],
+                    'post_time': [j.text.strip().split()[-2] for j in job.select('pubDate')][idx],
 
                 }
                 job_datas.append(datas)

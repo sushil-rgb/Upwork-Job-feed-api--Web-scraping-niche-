@@ -1,4 +1,4 @@
-from tool import Response, filter, flat, remove_duplicates, timezone_conversion
+from tool import Response, flat, remove_duplicates
 from bs4 import BeautifulSoup
 import pandas as pd
 import asyncio
@@ -30,7 +30,7 @@ async def job_alerts(rss_url):
                 'title': [j.text.strip() for j in job.select('title')[2:]][idx],
                 'link': [j.text.strip() for j in job.select('link')[2:]][idx],
                 'post_date': [' '.join(j.text.strip().split()[:-2]) for j in job.select('pubDate')][idx],
-                'post_time': [timezone_conversion(j.text.strip().split()[-2]) for j in job.select('pubDate')][idx],
+                'post_time': [j.text.strip().split()[-2] for j in job.select('pubDate')][idx],
 
             }
             job_datas.append(datas)

@@ -1,7 +1,9 @@
 from fake_useragent import UserAgent
-from urllib.parse import urlparse
+from datetime import datetime
 import itertools
 import aiohttp
+import tzlocal
+import pytz
 
 
 class Response:
@@ -23,12 +25,32 @@ class Response:
                 return cont
 
 
+def timezone_conversion(str_time):
+    time = datetime.strptime(str_time, "%H:%M:%S")
+    time_utc = pytz.utc.localize(time)
+    local_timezone = tzlocal.get_localzone()
+    time_local = time_utc.astimezone(local_timezone)
+    return time_local.time()
+
+
 def filter(raw_lists):
     filtered_lists = []
     for file in raw_lists:
         if not file in filtered_lists:
             filtered_lists.append(file)
     return filtered_lists
+
+
+def remove_duplicates(data):
+    seen = set()
+    unique_data = []
+    for item in data:
+        key = (item['title'], item['link'], item['post_date'], item['post_time'])
+        if key not in seen:
+            unique_data.append(item)
+            seen.add(key)
+    sorted_jobs = sorted(unique_data, key=lambda x: (x['post_date'], x['post_time']), reverse = False)
+    return sorted_jobs
 
 
 def flat(d_lists):

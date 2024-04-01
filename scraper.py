@@ -1,7 +1,5 @@
-from tool import Response, flat, remove_duplicates
+from tool import Response, flat, remove_duplicates, timezone_conversion
 from bs4 import BeautifulSoup
-import pandas as pd
-import asyncio
 
 
 async def rss_url_lists():
@@ -19,47 +17,49 @@ async def rss_url_lists():
     return flat(urls)
 
 
-async def job_alerts(rss_url):
+async def job_alerts():
+    rss_lists = await rss_url_lists()
     job_datas = []
-    cont = await Response(rss_url).content()
-    soup = BeautifulSoup(cont, 'xml')
-    jobs = soup.select('channel')
-    for job in jobs:
-        for idx in range(10):
-            datas = {
-                'title': [j.text.strip() for j in job.select('title')[2:]][idx],
-                'link': [j.text.strip() for j in job.select('link')[2:]][idx],
-                'post_date': [' '.join(j.text.strip().split()[:-2]) for j in job.select('pubDate')][idx],
-                'post_time': [j.text.strip().split()[-2] for j in job.select('pubDate')][idx],
+    for rss in rss_lists:
+        cont = await Response(rss).content()
+        soup = BeautifulSoup(cont, 'xml')
+        jobs = soup.select('channel')
+        for job in jobs:
+            for idx in range(10):
+                datas = {
+                    'title': [j.text.strip() for j in job.select('title')[2:]][idx],
+                    'link': [j.text.strip() for j in job.select('link')[2:]][idx],
+                    'post_date': [' '.join(j.text.strip().split()[:-2]) for j in job.select('pubDate')][idx],
+                    'post_time': [timezone_conversion(j.text.strip().split()[-2]) for j in job.select('pubDate')][idx],
 
-            }
-            job_datas.append(datas)
+                }
+                job_datas.append(datas)
 
-    return job_datas
+    return remove_duplicates(job_datas)
 
 
-async def concurrency():
-    urls = await rss_url_lists()
-    dfs = []
-    coroutines = [job_alerts(url) for url in urls]
-    results = await asyncio.gather(*coroutines)
+# async def concurrency():
+#     urls = await rss_url_lists()
+#     dfs = []
+#     coroutines = [job_alerts(url) for url in urls]
+#     results = await asyncio.gather(*coroutines)
 
-    res = [pd.DataFrame(result) for result in results]
-    dff = pd.concat(res)
+#     res = [pd.DataFrame(result) for result in results]
+#     dff = pd.concat(res)
 
-    length_example = len(dff['title'].values.tolist())
+#     length_example = len(dff['title'].values.tolist())
 
-    for idx in range(length_example):
-        try:
-            datas = {
-                "title": dff['title'].values.tolist()[idx],
-                "link": dff['link'].values.tolist()[idx],
-                'post_date':dff['post_date'].values.tolist()[idx],
-                'post_time': dff['post_time'].values.tolist()[idx],
-            }
-            dfs.append(datas)
-        except IndexError:
-            continue
+#     for idx in range(length_example):
+#         try:
+#             datas = {
+#                 "title": dff['title'].values.tolist()[idx],
+#                 "link": dff['link'].values.tolist()[idx],
+#                 'post_date':dff['post_date'].values.tolist()[idx],
+#                 'post_time': dff['post_time'].values.tolist()[idx],
+#             }
+#             dfs.append(datas)
+#         except IndexError:
+#             continue
 
-    return remove_duplicates(dfs)
+#     return remove_duplicates(dfs)
 

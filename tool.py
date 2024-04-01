@@ -1,9 +1,9 @@
 from fake_useragent import UserAgent
-# from datetime import datetime
+from datetime import datetime
 import itertools
 import aiohttp
-# import tzlocal
-# import pytz
+import tzlocal
+import pytz
 
 
 class Response:
@@ -25,12 +25,12 @@ class Response:
                 return cont
 
 
-# def timezone_conversion(str_time):
-#     time = datetime.strptime(str_time, "%H:%M:%S")
-#     time_utc = pytz.utc.localize(time)
-#     local_timezone = tzlocal.get_localzone()
-#     time_local = time_utc.astimezone(local_timezone)
-#     return time_local.time()
+def timezone_conversion(str_time):
+    time = datetime.strptime(str_time, "%H:%M:%S")
+    time_utc = pytz.utc.localize(time)
+    local_timezone = tzlocal.get_localzone()
+    time_local = time_utc.astimezone(local_timezone)
+    return time_local.time()
 
 
 def filter(raw_lists):

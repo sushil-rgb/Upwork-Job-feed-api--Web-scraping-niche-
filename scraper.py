@@ -22,7 +22,7 @@ from bs4 import BeautifulSoup
 async def job_alerts():
     job_datas = []
     for page in range(0, 20, 10):
-        rss_url = f"https://www.upwork.com/ab/feed/jobs/rss?paging={page}%3B10&q=data+extraction+web+scraping+data+scraping&sort=recency&subcategory2_uid=531770282593251331&api_params=1&securityToken=9036a5d7ac251defd2cbbdb953be6517dccc8dc88a16442dbe27b213db19c07588315c71fa8e894087e88e44384a7743bf0a75944eecda66f0909750157b2e4d&userUid=1368080374926864384&orgUid=1368080374926864385"
+        rss_url = f"https://www.upwork.com/ab/feed/jobs/rss?paging=0-10&q=data%20extraction&sort=recency&api_params=1&securityToken=9036a5d7ac251defd2cbbdb953be6517dccc8dc88a16442dbe27b213db19c07588315c71fa8e894087e88e44384a7743bf0a75944eecda66f0909750157b2e4d&userUid=1368080374926864384&orgUid=1368080374926864385https://www.upwork.com/ab/feed/jobs/rss?paging=0-10&q=data%20extraction&sort=recency&api_params=1&securityToken=9036a5d7ac251defd2cbbdb953be6517dccc8dc88a16442dbe27b213db19c07588315c71fa8e894087e88e44384a7743bf0a75944eecda66f0909750157b2e4d&userUid=1368080374926864384&orgUid=1368080374926864385"
         # rss_lists = await rss_url_lists()
         # for rss in rss_lists:
         cont = await Response(rss_url).content()
